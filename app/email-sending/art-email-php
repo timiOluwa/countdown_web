@@ -1,0 +1,30 @@
+<?php
+include('../database/config.php');
+
+// Fetch events that have reached their date but haven't sent the notification yet
+$stmt = $pdo->prepare("SELECT id, event_name, event_date, email FROM art_festivals WHERE event_date <= NOW() AND notified = 0");
+$stmt->execute();
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Check if there are any events to notify
+if (!empty($events)) {
+    foreach ($events as $event) {
+        // Send email to the user
+        $to = $event['email'];
+        $subject = "Your Event: " . $event['event_name'] . " is happening now!";
+        $message = "Dear user,\n\nYour event '" . $event['event_name'] . "' is happening now!\n\nBest regards,\nEvent Countdown Team";
+        $headers = "From: no-reply@eventcountdown.com";
+
+        if (mail($to, $subject, $message, $headers)) {
+            // Update the database to mark the event as notified
+            $updateStmt = $pdo->prepare("UPDATE events SET notified = 1 WHERE id = ?");
+            $updateStmt->execute([$event['id']]);
+            echo "Notification sent for event: " . $event['event_name'] . "\n";
+        } else {
+            echo "Failed to send notification for event: " . $event['event_name'] . "\n";
+        }
+    }
+} else {
+    echo "No events to notify.\n";
+}
+?>
