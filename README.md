@@ -11,9 +11,6 @@ This **Event Countdown Website** allows users to input event details, select an 
 - **Database Storage**: Events are stored in a MySQL database.  
 - **Responsive Design**: The website is optimized for all devices, ensuring a great user experience on desktops, tablets, and mobile phones.
 
-## Demo  
-You can view the live version of the website [here](#) (Replace `#` with the actual hosting link once deployed).  
-
 ## Installation  
 To run the project locally:  
 1. Clone the repository:  
